@@ -1,53 +1,92 @@
 # TypeScript Notes
 
-## TypeScript kya hai?
+## 1. TypeScript kya hai?
+
+TypeScript, JavaScript ka **superset** hai jo JavaScript mein **static typing** aur additional features provide karta hai.
+
+### Basic Notes
 
 * TypeScript file ka extension `.ts` hota hai.
-* Valid JavaScript code, TypeScript code bhi hota hai.
-* TypeScript mein hum variables aur functions ke **types define** kar sakte hain.
+* JavaScript ka valid code generally TypeScript mein bhi valid hota hai.
+* TypeScript compile hone ke baad JavaScript mein convert hota hai.
 
 ---
 
-# Types
+# 2. Types
 
-TypeScript mein basic tor par types ko do categories mein samjha ja sakta hai:
+TypeScript mein commonly types ko do broad categories mein samjha ja sakta hai:
 
 1. **Primitive Types**
-2. **Reference Types**
+2. **Reference / Non-Primitive Types**
 
-### Primitive Types
+> Note: Technically TypeScript mein `primitive` aur `object` types ki classification JavaScript ki type system par based hai. `function`, `array`, `object` waghera object/non-primitive category mein aate hain.
 
-Primitive types mein:
+## Primitive Types
+
+Common primitive types:
 
 * `string`
-* `undefined`
-* `boolean`
 * `number`
-* `symbol`
+* `boolean`
+* `undefined`
+* `null`
 * `bigint`
+* `symbol`
 
-shamil hain.
+> `Character` TypeScript ka separate primitive type nahi hai. Single character bhi `string` hota hai.
 
-### Reference Types
+### Example
 
-Reference types mein:
+```ts
+let name: string = "Ahmed";
+let age: number = 25;
+let isAdmin: boolean = false;
+let value: undefined = undefined;
+```
 
-* `function`
-* `array`
-* `object`
-* `tuple`
+### Important
 
-waghera shamil hain.
+TypeScript mein type names generally **lowercase** mein likhe jate hain:
 
-> **Note:** TypeScript mein types ko aam tor par lowercase mein likha jata hai, jaise `number`, `string`, `boolean` etc.
+```ts
+string
+number
+boolean
+undefined
+null
+```
+
+`String`, `Number`, aur `Boolean` wrapper/object types hain aur normally inki jagah lowercase types use karne chahiye.
 
 ---
 
-# Tuple
+# 3. Reference / Non-Primitive Types
 
-**Tuple** ek aisa array hota hai jismein har value ka type uske **index** ke mutabiq define kiya jata hai.
+Common non-primitive types:
 
-### Example:
+* `object`
+* `Array`
+* `Function`
+* `Tuple`
+
+Examples:
+
+```ts
+let numbers: number[] = [1, 2, 3];
+
+let user: object = {
+  name: "Ahmed",
+  age: 25,
+};
+```
+
+---
+
+# 4. Tuple
+
+**Tuple** ek array hota hai jisme har element ka type aur position pehle se define ki ja sakti hai.
+
+### Example
 
 ```ts
 let arr: [number, string] = [20, "hey"];
@@ -58,77 +97,111 @@ Is example mein:
 * Index `0` par `number` hona chahiye.
 * Index `1` par `string` hona chahiye.
 
+```ts
+let user: [string, number] = ["Ahmed", 25];
+```
+
 ---
 
-# Void
+# 5. Void
 
-`void` zyada tar **functions** ke liye use hota hai.
+`void` mostly functions ke return type ke liye use hota hai jab function koi meaningful value return nahi karta.
 
-Agar function koi value return nahi kar raha ho, to hum uska return type `void` rakh sakte hain.
-
-### Example:
+### Example
 
 ```ts
-function hello(): void {
+function greet(): void {
   console.log("Hello");
 }
 ```
 
-Yahan function koi value return nahi kar raha, is liye iska return type `void` hai.
+Yahan function koi value return nahi kar raha, is liye return type `void` hai.
 
 ---
 
-# Enum
+# 6. Enum
 
-`enum` ka use related values ka ek **group** banane ke liye hota hai.
+`enum` related **named constants** ka group banane ke liye use hota hai.
 
-Enum ke andar values ko generally object ki tarah define kiya jata hai.
+Enum ke andar values `=` ke saath assign hoti hain, `:` ke saath nahi.
 
-> **Important:** `enum` mein values ko `=` ke sath assign kiya jata hai, `:` ke sath nahi.
-
-### Example:
+### Example
 
 ```ts
 enum Car {
-  dore = "Dore",
-  wheel = "Wheel",
-  glass = "Glass",
+  Door = "Door",
+  Wheel = "Wheel",
+  Glass = "Glass",
 }
 
-console.log(Car.dore);
+console.log(Car.Door);
+```
+
+Output:
+
+```text
+Door
+```
+
+### Important
+
+Enum members ko convention ke mutabiq `PascalCase` mein likhna zyada readable hota hai:
+
+```ts
+Door
+Wheel
+Glass
 ```
 
 ---
 
-# Type Inference
+# 7. Type Inference
 
-**Type Inference** ka matlab hai ke TypeScript khud se variable ka type identify kar leta hai.
+**Type Inference** ka matlab hai ke TypeScript khud variable ki type determine kar leta hai, agar hum explicitly type define na karein.
 
-Yani humein har jagah manually type define karne ki zaroorat nahi hoti.
+### Example
 
-### Example:
+```ts
+let b = 5;
+let c = false;
+let d = "Hello";
+```
+
+TypeScript automatically infer karega:
+
+```text
+b → number
+c → boolean
+d → string
+```
+
+## `any` ke baare mein Important Note
 
 ```ts
 let a;
-let b = 5;
-let c = false;
 ```
 
-* `a` ka type `any` ho sakta hai agar usay koi specific value/type na diya jaye.
-* `b` ka type TypeScript `number` infer karega.
-* `c` ka type TypeScript `boolean` infer karega.
+Is tarah declare kiye gaye variable ki type context aur usage ke mutabiq infer ho sakti hai. Isay hamesha simply `any` samajhna correct nahi hai.
+
+Agar variable explicitly `any` ho:
+
+```ts
+let a: any;
+```
+
+to TypeScript us variable par type checking ko largely disable kar deta hai.
+
+> TypeScript mein unnecessary `any` use karne se type safety kam ho jati hai, is liye possible ho to `any` avoid karein.
 
 ---
 
-# Union Types
+# 8. Union Types
 
-**Union Type** ka matlab hai ke ek variable ko **ek se zyada types** allow karna.
+**Union Type** ka matlab hai ke ek variable ek se zyada possible types mein se koi ek value rakh sakta hai.
 
-Yani variable mein ya to ek type ki value ho sakti hai ya doosri type ki.
+Union ke liye `|` operator use hota hai.
 
-Union ke liye `|` symbol use hota hai.
-
-### Example:
+### Example
 
 ```ts
 let x: number | string;
@@ -137,46 +210,62 @@ x = 12;
 x = "Hello";
 ```
 
-Is example mein `x` mein `number` ya `string`, dono mein se koi bhi value store ho sakti hai.
+Yahan `x` ke andar `number` ya `string` dono mein se koi ek value aa sakti hai.
+
+### Another Example
+
+```ts
+let id: number | string;
+
+id = 101;
+id = "USER-101";
+```
 
 ---
 
-# Type Aliases
+# 9. Type Aliases
 
-**Type Alias** ka matlab hai ke hum apne custom type ka naam bana sakte hain.
+**Type Alias** ki madad se hum kisi type ko apna custom naam de sakte hain.
 
-Type Aliases ko commonly do tarah se samjha ja sakta hai:
+Syntax:
+
+```ts
+type TypeName = ...;
+```
+
+Type aliases ke commonly do examples:
 
 1. Primitive Type Alias
 2. Object Type Alias
 
 ---
 
-## 1. Primitive Type Alias
+## 9.1 Primitive Type Alias
 
-Hum kisi existing primitive type ko apni marzi ka naam de sakte hain.
+Hum kisi existing type ko apna custom naam de sakte hain.
 
-### Example:
+### Example
 
 ```ts
-type tadat = number;
-type str = string;
+type ID = number;
+type Username = string;
 
-let q: str = "hello";
+let userId: ID = 101;
+let username: Username = "Ahmed";
 ```
 
 Yahan:
 
-* `tadat` ek alias hai `number` ka.
-* `str` ek alias hai `string` ka.
+* `ID` → `number` ka alias hai.
+* `Username` → `string` ka alias hai.
 
 ---
 
-# 2. Object Type Alias
+## 9.2 Object Type Alias
 
-Object Type Alias mein hum multiple properties aur unke types ko ek custom type ke andar define kar sakte hain.
+Object ka structure define karne ke liye bhi type alias use kar sakte hain.
 
-### Example:
+### Example
 
 ```ts
 type User = {
@@ -186,44 +275,59 @@ type User = {
   age: number;
   admin: boolean;
 };
-```
 
-Ab hum `User` type ko object banane ke liye use kar sakte hain:
-
-```ts
 let user: User = {
   name: "Barkati",
   username: "Barkati",
   email: "barkati@ex.com",
-  admin: false,
   age: 25,
+  admin: false,
 };
 ```
 
-Yahan `user` object ko `User` type follow karna zaroori hai.
+Ab `User` type ke kisi bhi variable ko same structure follow karna hoga.
 
 ---
 
-# Type vs Interface
+# 10. Type vs Interface
 
-Type aur Interface dono custom types define karne ke liye use hote hain, lekin in dono mein kuch differences hain.
+`type` aur `interface` dono custom types define karne ke liye use ho sakte hain, especially object shapes ke liye.
 
-### Type
+| Type                                                              | Interface                                                    |
+| ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| `=` ke saath define hota hai                                      | `=` use nahi hota                                            |
+| Primitive, union, tuple aur object types define kar sakta hai     | Mainly object/class shapes define karne ke liye use hota hai |
+| Same scope mein same naam ka duplicate type alias nahi bana sakte | Same naam ki interfaces declaration merging kar sakti hain   |
+| Union aur intersection types ke liye useful hai                   | `extends` ke through inheritance ke liye useful hai          |
 
-* `type` ke sath `=` sign use hota hai.
-* Same scope mein same naam ka doosra `type` dobara define nahi kar sakte.
-* Type ko union, primitive aur object types ke liye use kiya ja sakta hai.
-
-### Interface
-
-* `interface` mein `=` sign use nahi hota.
-* Same naam ke multiple interfaces define kiye ja sakte hain aur TypeScript unhein merge kar deta hai.
-* Interface zyada tar objects aur classes ki **shape/structure** define karne ke liye use hota hai.
-
-### Example:
+### Type Example
 
 ```ts
-type pass = number | string;
+type Pass = number | string;
+```
+
+### Interface Example
+
+```ts
+interface UserI {
+  name: string;
+  email: string;
+  age: number;
+}
+```
+
+> `String` ki jagah `string` use karna recommended hai.
+
+---
+
+# 11. Interface Declaration Merging
+
+Interface ko same naam ke saath multiple times declare kiya ja sakta hai. TypeScript in declarations ko merge kar deta hai.
+
+### Example
+
+```ts
+type Pass = number | string;
 
 interface UserI {
   name: string;
@@ -232,64 +336,62 @@ interface UserI {
 }
 
 interface UserI {
-  password: pass;
+  password: Pass;
 }
 ```
 
-Yahan dono `UserI` interfaces merge ho jayenge.
-
-Is wajah se final `UserI` mein ye properties hongi:
-
-* `name`
-* `email`
-* `age`
-* `password`
-
-### Function Example:
+Ab `UserI` mein ye tamam properties available hain:
 
 ```ts
-function userFun(user: UserI) {
-  let index: number = user.email.indexOf("f");
+interface UserI {
+  name: string;
+  email: string;
+  age: number;
+  password: Pass;
+}
+```
+
+### Function Example
+
+```ts
+function userFun(user: UserI): void {
+  const index: number = user.email.indexOf("f");
   console.log(user);
 }
 ```
 
 ---
 
-# Interface Extend
+# 12. Interface `extends`
 
-Interface ko doosre interface se **extend** bhi kiya ja sakta hai.
+Interface ko kisi doosri interface se extend kiya ja sakta hai.
 
-Iska matlab hai ke ek interface doosre interface ki properties ko inherit kar sakta hai.
+Iska use tab useful hota hai jab multiple objects mein kuch common properties hon.
 
-### Example:
+### Example
 
-Humare paas different vehicles hain:
-
-* Bike
-* Car
-* Riksha
-
-Pehle common vehicle properties define karte hain:
+Hum vehicles ke liye ek common interface bana sakte hain:
 
 ```ts
 interface VehicleI {
   numberPlate: number;
   price: number;
-  Driver: string;
+  driver: string;
 }
 ```
 
-Ab `BikeI` ko `VehicleI` se extend karte hain:
+Ab `BikeI` aur `CarI` is interface ko extend kar sakte hain.
+
+### Bike
 
 ```ts
 interface BikeI extends VehicleI {
-  halmate: boolean;
-  handicaters: boolean;
+  helmet: boolean;
+  indicators: boolean;
 }
 ```
 
-Isi tarah `CarI` bhi `VehicleI` se extend kar sakta hai:
+### Car
 
 ```ts
 interface CarI extends VehicleI {
@@ -298,137 +400,159 @@ interface CarI extends VehicleI {
 }
 ```
 
-Ab `CarI` ke andar `VehicleI` ki properties bhi hongi aur apni properties bhi.
-
-### Function Example:
+### Example Function
 
 ```ts
-function getBikeDataFun(value: CarI) {
-  value.seatBelt;
+function getCarDataFun(value: CarI): void {
+  console.log(value.seatBelt);
 }
 ```
 
+> Original example mein function ka naam `getBikeDataFun` tha lekin parameter type `CarI` thi. Isay `getCarDataFun` karna zyada consistent hai.
+
 ---
 
-# Classes
+# 13. Classes
 
-**Class** ko hum ek blueprint ya structure samajh sakte hain.
+**Class** kisi specific type/object ki structure aur behavior define karne ke liye use hoti hai.
 
-Class ke andar:
+Class ke andar hum:
 
-* Variables/properties
-* Methods
-* Functions
+* Properties define kar sakte hain.
+* Methods define kar sakte hain.
+* Constructor define kar sakte hain.
+* Access modifiers use kar sakte hain.
 
-define kiye ja sakte hain.
+Class ka instance banane ke liye `new` keyword use hota hai.
 
-Class se hum multiple objects bana sakte hain.
+### `this` Keyword
 
-Har object ka apna data hota hai. Agar ek object ki property change karein, to normally doosre object ki property automatically change nahi hoti.
+Class ke andar current object ki properties aur methods access karne ke liye `this` keyword use hota hai.
 
-Class ke andar current object ki properties aur methods ko access karne ke liye `this` keyword use hota hai.
-
-### Example:
+### Example
 
 ```ts
 class Vehicle {
   price = "30000";
   color = "red";
-  numberPlate = "yoy0101";
+  numberPlate = "YOY0101";
   race = 5;
 
-  increaseSpeed() {
+  increaseSpeed(): void {
     this.race++;
     console.log(this.race);
   }
 
-  on(name: string) {
+  on(name: string): void {
     console.log(`On ${name}`);
   }
 
-  off(name: string) {
+  off(name: string): void {
     console.log(`Off ${name}`);
   }
 
-  reverseOn() {
+  reverseOn(): void {
     console.log("Reverse on");
   }
 
-  reverseOff() {
-    console.log("Reverse Off");
+  reverseOff(): void {
+    console.log("Reverse off");
   }
 }
-```
 
-Ab hum `Vehicle` class ka object bana sakte hain:
-
-```ts
 let bike1 = new Vehicle();
 
 bike1.on("Bike1");
 bike1.off("Bike1");
 ```
 
-Yahan `new Vehicle()` se `Vehicle` class ka ek naya object create hua.
+### Important Concept
+
+```ts
+let bike1 = new Vehicle();
+let bike2 = new Vehicle();
+```
+
+`bike1` aur `bike2` do separate instances hain. Ek instance ki property change karne se normally doosre instance ki property change nahi hoti.
 
 ---
 
-# Class ka Doosra Example
+# 14. Another Class Example
 
-Hum union type ko class ke andar bhi use kar sakte hain.
+Union type ko class properties ke saath bhi use kiya ja sakta hai.
 
 ```ts
-type NN = number | null;
+type NullableNumber = number | null;
 
 class Router {
   name = "Vsol";
-  price: NN = null;
-  sno: NN | null = null;
+  price: NullableNumber = null;
+  sno: NullableNumber = null;
 
-  strat(value: number) {
+  start(value: number): void {
     this.sno = value;
     console.log(`Router ID: ${value}`);
   }
 
-  close(value: number) {
+  close(value: number): void {
     this.sno = value;
-    console.log(`Closed router, Router ID ${value}`);
+    console.log(`Closed router, Router ID: ${value}`);
   }
 
-  getData(data: string) {
-    console.log(`Data Transfer Start ${data}`);
+  getData(data: string): void {
+    console.log(`Data Transfer Start: ${data}`);
   }
 }
-```
 
-Ab hum `Router` class ke multiple objects bana sakte hain:
-
-```ts
 let router1 = new Router();
 let router2 = new Router();
 
 router1.price = 2000;
-router1.strat(3000);
+router1.start(3000);
 
 router2.price = 3000;
-router2.strat(4000);
-
+router2.start(4000);
 router2.close(4000);
 ```
 
-Yahan `router1` aur `router2` **alag objects** hain, is liye dono ka data alag rahega.
+### Corrections
+
+Original code mein:
+
+```ts
+strat()
+```
+
+likha gaya tha. Correct naming:
+
+```ts
+start()
+```
+
+Isi tarah:
+
+```text
+rounter → router
+Trasfer → Transfer
+```
 
 ---
 
-# Constructor
+# 15. Constructor
 
-`constructor` class ka ek special method hota hai.
+**Constructor** class ka special method hota hai jo object create hote waqt automatically execute hota hai.
 
-Jab class ka object create hota hai, to constructor automatically execute hota hai.
+Constructor ka naam hamesha:
 
-Constructor ka use aksar object ki initial properties ko set karne ke liye kiya jata hai.
+```ts
+constructor
+```
 
-### Constructor Example:
+hota hai.
+
+Constructor ka use commonly object ki initial properties set karne ke liye hota hai.
+
+### Example
 
 ```ts
 class Bulb {
@@ -436,6 +560,7 @@ class Bulb {
   company: string;
   color: string;
   bodyColor: string;
+  voltage = 18;
 
   constructor(
     company: string,
@@ -449,38 +574,297 @@ class Bulb {
     this.bodyColor = bodyColor;
   }
 }
-```
 
-Ab hum different bulbs ke objects create kar sakte hain:
+let bulb1 = new Bulb("Vivo", 100, "White", "Golden Yellow");
 
-```ts
-let bulb1 = new Bulb("vivo", 100, "White", "golden-yellow");
+bulb1.voltage = 20;
 
-let bulb2 = new Bulb("new", 400, "Black", "Green-yellow");
+let bulb2 = new Bulb("New", 400, "Black", "Green Yellow");
 
 console.log(bulb1);
-console.log(bulb2);
 ```
 
-Yahan jab `new Bulb(...)` likha jata hai, to constructor automatically call hota hai aur jo values hum pass karte hain, woh object ki properties mein store ho jati hain.
+### Constructor ka Basic Flow
+
+```text
+new Bulb(...)
+      ↓
+constructor execute hota hai
+      ↓
+properties initialize hoti hain
+      ↓
+object ready hota hai
+```
 
 ---
 
-# Quick Revision
+# 16. Constructor Parameter Properties
 
-| Concept        | Roman Urdu mein Meaning                                            |
-| -------------- | ------------------------------------------------------------------ |
-| `string`       | Text/value jo characters par mushtamil ho                          |
-| `number`       | Numbers ke liye                                                    |
-| `boolean`      | `true` ya `false`                                                  |
-| `tuple`        | Fixed structure wala array                                         |
-| `void`         | Function koi value return nahi karta                               |
-| `enum`         | Related values ka group                                            |
-| Type Inference | TypeScript khud type identify karta hai                            |
-| Union          | Ek variable mein multiple possible types                           |
-| Type Alias     | Custom type ka naam banana                                         |
-| Interface      | Object/class ki structure define karna                             |
-| `extends`      | Ek interface se doosre interface ko inherit karna                  |
-| Class          | Objects banane ka blueprint                                        |
-| `this`         | Current object ko refer karta hai                                  |
-| Constructor    | Object create hote waqt automatically run hone wala special method |
+TypeScript mein constructor parameters ke saath access modifiers use karke properties ko directly declare aur initialize kiya ja sakta hai.
+
+Common access modifiers:
+
+1. `public`
+2. `private`
+3. `protected`
+
+---
+
+## 16.1 Public
+
+`public` property ko class ke andar aur class ke bahar instance ke through access aur update kiya ja sakta hai.
+
+`public` default access modifier hai.
+
+### Example
+
+```ts
+class User {
+  constructor(public name: string) {}
+}
+
+const user = new User("Ahmed");
+
+console.log(user.name);
+user.name = "Ali";
+```
+
+---
+
+## 16.2 Private
+
+`private` property sirf usi class ke andar access ki ja sakti hai.
+
+Class ke bahar instance ke through directly access nahi ki ja sakti.
+
+### Example
+
+```ts
+class Customer {
+  private balance = 1200;
+  branch = "Karachi";
+
+  constructor(name: string, email: string) {
+    console.log(name);
+  }
+
+  getBalance(): void {
+    console.log(this.balance);
+  }
+}
+
+const customer1 = new Customer("Ahmed", "ahmed@ex.com");
+
+customer1.getBalance();
+
+// Error:
+// customer1.balance;
+```
+
+### Important
+
+`private` property ko class ke bahar directly read **ya update** nahi kar sakte.
+
+---
+
+## 16.3 Protected
+
+`protected` property:
+
+* Parent class ke andar access ho sakti hai.
+* Child/extended class ke andar access ho sakti hai.
+* Class ke bahar instance ke through directly access nahi ho sakti.
+
+### Example
+
+```ts
+class Vehicle {
+  protected speed = 100;
+}
+
+class Bike extends Vehicle {
+  showSpeed(): void {
+    console.log(this.speed);
+  }
+}
+
+const bike = new Bike();
+
+bike.showSpeed();
+
+// Error:
+// bike.speed;
+```
+
+---
+
+# 17. Access Modifiers — Quick Comparison
+
+| Modifier    | Same Class | Child Class | Outside via Instance |
+| ----------- | ---------: | ----------: | -------------------: |
+| `public`    |        Yes |         Yes |                  Yes |
+| `protected` |        Yes |         Yes |                   No |
+| `private`   |        Yes |          No |                   No |
+
+> `public`, `private`, aur `protected` properties aur methods dono ke saath use kiye ja sakte hain.
+
+### Example
+
+```ts
+class Example {
+  public name = "Ahmed";
+  private password = "1234";
+  protected age = 25;
+
+  public getName(): string {
+    return this.name;
+  }
+}
+```
+
+---
+
+# 18. Readonly Property
+
+`readonly` ka matlab hai ke property ko initialize hone ke baad normally reassign nahi kiya ja sakta.
+
+`readonly` ka matlab **"sirf class ke andar read kar sakte hain"** nahi hai.
+
+Agar property `public readonly` hai, to usay class ke bahar read kar sakte hain, lekin reassign nahi kar sakte.
+
+### Example
+
+```ts
+class Button {
+  constructor(
+    public name: string,
+    public readonly email: string,
+  ) {}
+}
+
+let B1 = new Button("Kamran", "Kamran@email.com");
+
+console.log(B1.name);
+console.log(B1.email);
+
+B1.name = "Ali"; // Allowed
+
+// B1.email = "Ali@email.com";
+// Error: Cannot assign to 'email' because it is a read-only property.
+```
+
+---
+
+# 19. Constructor Parameter Properties — Combined Example
+
+Constructor mein `public`, `private`, `protected`, aur `readonly` ko directly use kiya ja sakta hai.
+
+```ts
+class Account {
+  constructor(
+    public name: string,
+    private balance: number,
+    protected accountType: string,
+    public readonly accountNumber: string,
+  ) {}
+
+  getBalance(): number {
+    return this.balance;
+  }
+}
+
+const account = new Account(
+  "Ahmed",
+  5000,
+  "Savings",
+  "ACC-001",
+);
+
+console.log(account.name);
+console.log(account.getBalance());
+console.log(account.accountNumber);
+
+// Direct access not allowed:
+// account.balance;
+// account.accountType;
+
+// Readonly property ko reassign nahi kar sakte:
+// account.accountNumber = "ACC-002";
+```
+
+---
+
+# 20. Quick Revision
+
+| Concept        | Short Explanation                                     |
+| -------------- | ----------------------------------------------------- |
+| `string`       | Text data                                             |
+| `number`       | Numeric data                                          |
+| `boolean`      | `true` ya `false`                                     |
+| `undefined`    | Value define nahi hui                                 |
+| `null`         | Intentionally empty value                             |
+| `tuple`        | Fixed positions ke saath defined types                |
+| `void`         | Function meaningful value return nahi karta           |
+| `enum`         | Named constants ka group                              |
+| Type Inference | TypeScript khud type determine karta hai              |
+| Union          | Ek variable ke liye multiple possible types           |
+| Type Alias     | Custom type ka naam                                   |
+| Interface      | Object/class ka structure define karna                |
+| `extends`      | Interface/class ko extend karna                       |
+| Class          | Object ka structure aur behavior define karna         |
+| Constructor    | Object create hone par automatically execute hota hai |
+| `public`       | Har jagah accessible                                  |
+| `private`      | Sirf same class mein accessible                       |
+| `protected`    | Same class aur child class mein accessible            |
+| `readonly`     | Property ko reassign nahi kar sakte                   |
+
+---
+
+# Important Corrections
+
+Original notes mein kuch common mistakes thin jo documentation mein correct kar di gayi hain:
+
+* `Characters` → TypeScript ka separate type nahi; character bhi `string` hota hai.
+* `String` → `string` use karna recommended hai.
+* `Constractor` → `Constructor`
+* `strat()` → `start()`
+* `rounter` → `router`
+* `Trasfer` → `Transfer`
+* `halmate` → `helmet`
+* `handicaters` → `indicators` (context ke mutabiq)
+* `getBikeDataFun(value: CarI)` → `getCarDataFun(value: CarI)`
+* `readonly` ka matlab sirf read access nahi; iska main purpose **reassignment ko prevent karna** hai.
+* `let a;` ko hamesha `any` kehna technically correct nahi hai.
+* Class instances ek doosre se normally independent hoti hain; ek instance ki property change karne se doosre instance ki property automatically change nahi hoti.
+
+---
+
+# Summary
+
+TypeScript ka main purpose JavaScript ko **type safety, better tooling aur maintainable code** provide karna hai.
+
+Is section mein humne ye important concepts cover kiye:
+
+```text
+Types
+ ├── Primitive Types
+ ├── Non-Primitive Types
+ ├── Tuple
+ ├── Void
+ ├── Enum
+ ├── Type Inference
+ └── Union Types
+
+Custom Types
+ ├── Type Alias
+ └── Interface
+
+Object-Oriented Programming
+ ├── Classes
+ ├── Constructor
+ ├── Constructor Parameter Properties
+ ├── public
+ ├── private
+ ├── protected
+ └── readonly
+```

@@ -103,6 +103,7 @@ router2.close(4000);
 // Constractor Example 1
 class bulb {
     constructor(company, price, color, bodyColor) {
+        this.voltage = 18;
         this.company = company;
         this.price = price;
         this.color = color;
@@ -110,8 +111,38 @@ class bulb {
     }
 }
 let bulb1 = new bulb("vivo", 100, "White", "golden-yellow");
+bulb1.voltage = 20;
 let bulb2 = new bulb("new", 400, "Black", "Green-yellow");
 console.log(bulb1);
-console.log(bulb);
+//  Constractor parameter properties 3 hain.
+// 1. Public (bydefult) : class ma or class ka bahar kahi par bhi use, read, and update kar sakta hain.
+// 2. Private : Class ka under read kar sakta hain but class ka baha kahi par bhi read nahi kar sakta. or class ma or calss ka bahar kahi sa bhi update nahi kar sakta hain.
+// 3. protected: khud ke class and extent class ma use kar sakta ho. lakin instance ma use nahi kar sakta ho.
+// Note:
+//->) In 3 ko methods & Variables 2 ma use kar sakta hain.
+// Example:
+class customer {
+    constructor(name, email) {
+        this.balance = "1200";
+        this.branch = "karachi";
+        console.log(name);
+    }
+    getBalance() {
+        console.log(this.balance);
+    }
+}
+window.C1 = new customer("Ahmed", "ahmed@ex.com");
+// constructor readonly property: readonly: sirf read kar sakta hain but class and outer class use nahi kar sakta hain.
+class Button {
+    constructor(name, email) {
+        this.name = name;
+        this.email = email;
+        name = name;
+        email = email;
+        console.log(name, email);
+    }
+}
+let B1 = new Button("kamran", "Kamran@email.com");
 export {};
+// Geter & Setter
 //# sourceMappingURL=script.js.map
