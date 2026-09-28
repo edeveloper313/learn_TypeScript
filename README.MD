@@ -837,7 +837,373 @@ Original notes mein kuch common mistakes thin jo documentation mein correct kar 
 * `let a;` ko hamesha `any` kehna technically correct nahi hai.
 * Class instances ek doosre se normally independent hoti hain; ek instance ki property change karne se doosre instance ki property automatically change nahi hoti.
 
+
+# 21. Getter & Setter
+
+**Getter** aur **Setter** ka use class ki properties ko controlled way mein **read** aur **update** karne ke liye kiya jata hai.
+
+Simple words mein:
+
+* `get` → property ki value **read** karne ke liye.
+* `set` → property ki value **update/change** karne ke liye.
+
+Getter aur Setter ki wajah se method ko property ki tarah use kar sakte hain.
+
 ---
+
+## 21.1 Getter
+
+Getter banane ke liye `get` keyword use hota hai.
+
+### Example
+
+```ts
+class Car {
+  public name: string;
+  public price: number;
+
+  constructor(name: string, price: number) {
+    this.name = name;
+    this.price = price;
+  }
+
+  get amount(): number {
+    return this.price;
+  }
+}
+```
+
+Ab `amount` ko function ki tarah call nahi karna, balki property ki tarah access karna hai:
+
+```ts
+const c1 = new Car("Civic", 20000);
+
+console.log(c1.amount);
+```
+
+Output:
+
+```text
+20000
+```
+
+### Important
+
+Getter ko call karte waqt `()` use nahi hota.
+
+```ts
+c1.amount;    // Correct
+
+// c1.amount(); // Incorrect
+```
+
+---
+
+# 21.2 Setter
+
+Setter banane ke liye `set` keyword use hota hai.
+
+Setter ka use property ki value ko update karne ke liye hota hai.
+
+### Example
+
+```ts
+class Car {
+  public name: string;
+  public price: number;
+
+  constructor(name: string, price: number) {
+    this.name = name;
+    this.price = price;
+  }
+
+  get amount(): number {
+    return this.price;
+  }
+
+  set amount(value: number) {
+    this.price = value;
+  }
+}
+```
+
+Ab `amount` ki value ko property ki tarah update kar sakte hain:
+
+```ts
+const c1 = new Car("Civic", 20000);
+
+c1.amount = 4000;
+
+console.log(c1.amount);
+```
+
+Output:
+
+```text
+4000
+```
+
+Yahan:
+
+```ts
+c1.amount = 4000;
+```
+
+automatically Setter ko trigger karega:
+
+```ts
+set amount(value: number) {
+  this.price = value;
+}
+```
+
+---
+
+# 21.3 Getter & Setter Complete Example
+
+```ts
+class Car {
+  public name: string;
+  public price: number;
+
+  constructor(name: string, price: number) {
+    this.name = name;
+    this.price = price;
+  }
+
+  // Getter
+  get amount(): number {
+    return this.price;
+  }
+
+  // Setter
+  set amount(value: number) {
+    this.price = value;
+  }
+
+  getPrice(): void {
+    console.log(this.price);
+  }
+
+  setPrice(value: number): void {
+    this.price = value;
+  }
+}
+
+const c1 = new Car("Civic", 20000);
+
+// Setter
+c1.amount = 4000;
+
+// Getter
+console.log(c1.amount);
+
+// Complete object
+console.log(c1);
+```
+
+---
+
+# 21.4 Getter/Setter vs Normal Methods
+
+Same property ko read aur update karne ke do different approaches ho sakte hain.
+
+### Normal Methods
+
+```ts
+class Car {
+  price = 20000;
+
+  getPrice(): number {
+    return this.price;
+  }
+
+  setPrice(value: number): void {
+    this.price = value;
+  }
+}
+
+const c1 = new Car();
+
+c1.setPrice(4000);
+
+console.log(c1.getPrice());
+```
+
+Yahan methods ko `()` ke saath call karna padta hai:
+
+```ts
+c1.setPrice(4000);
+c1.getPrice();
+```
+
+### Getter & Setter
+
+```ts
+class Car {
+  price = 20000;
+
+  get amount(): number {
+    return this.price;
+  }
+
+  set amount(value: number) {
+    this.price = value;
+  }
+}
+
+const c1 = new Car();
+
+c1.amount = 4000;
+
+console.log(c1.amount);
+```
+
+Yahan property ki tarah use hota hai:
+
+```ts
+c1.amount = 4000;
+console.log(c1.amount);
+```
+
+---
+
+# 21.5 Getter & Setter ka Faida
+
+Getter aur Setter ka important benefit ye hai ke hum property ke **read aur update behavior ko control** kar sakte hain.
+
+For example, hum Setter mein validation laga sakte hain.
+
+### Example: Price Validation
+
+```ts
+class Car {
+  private _price: number;
+
+  constructor(price: number) {
+    this._price = price;
+  }
+
+  get price(): number {
+    return this._price;
+  }
+
+  set price(value: number) {
+    if (value < 0) {
+      console.log("Price negative nahi ho sakti.");
+      return;
+    }
+
+    this._price = value;
+  }
+}
+
+const c1 = new Car(20000);
+
+c1.price = 40000;
+
+console.log(c1.price);
+```
+
+Agar koi negative price set kare:
+
+```ts
+c1.price = -500;
+```
+
+to Setter validation ko execute karega aur invalid value ko reject kiya ja sakta hai.
+
+---
+
+# 21.6 Naming Convention
+
+Getter/Setter ke saath private backing property ke liye aksar underscore `_` use kiya jata hai.
+
+```ts
+class Car {
+  private _price: number;
+
+  get price(): number {
+    return this._price;
+  }
+
+  set price(value: number) {
+    this._price = value;
+  }
+}
+```
+
+Yahan:
+
+```text
+_price
+  ↓
+Internal/private property
+
+price
+  ↓
+Public getter/setter interface
+```
+
+Is approach se internal data ko directly expose kiye baghair controlled access diya ja sakta hai.
+
+---
+
+# 21.7 Quick Revision
+
+| Keyword   | Purpose                                                          |
+| --------- | ---------------------------------------------------------------- |
+| `get`     | Property ki value read karne ke liye                             |
+| `set`     | Property ki value update karne ke liye                           |
+| Getter    | Method ko property ki tarah read karta hai                       |
+| Setter    | Property assignment ke through value update karta hai            |
+| `private` | Internal property ko direct external access se protect karta hai |
+| `_price`  | Common private backing-property naming convention                |
+
+### Syntax
+
+```ts
+get propertyName(): type {
+  return value;
+}
+
+set propertyName(value: type) {
+  // update logic
+}
+```
+
+### Usage
+
+```ts
+// Getter
+object.propertyName;
+
+// Setter
+object.propertyName = value;
+```
+
+---
+
+# Summary
+
+**Getter** aur **Setter** class ki properties ko controlled way mein read aur update karne ka mechanism hain.
+
+```text
+Getter
+  ↓
+Read Property
+  ↓
+object.amount
+
+Setter
+  ↓
+Update Property
+  ↓
+object.amount = 4000
+```
+
+Getter aur Setter ka use especially tab useful hota hai jab property ko read/update karne se pehle **validation, transformation, calculation ya additional logic** perform karna ho.
+
 
 # Summary
 
