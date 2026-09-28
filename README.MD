@@ -484,7 +484,3 @@ Yahan jab `new Bulb(...)` likha jata hai, to constructor automatically call hota
 | Class          | Objects banane ka blueprint                                        |
 | `this`         | Current object ko refer karta hai                                  |
 | Constructor    | Object create hote waqt automatically run hone wala special method |
-
-## Important Note
-
-Aapke original notes mein kuch **spelling aur TypeScript syntax** ki mistakes bhi thin, jaise `Constractor` → `Constructor`, `strat` → `start`, aur `console.log(bulb)` ki jagah object ko log karna. Maine explanation ko correct kiya hai aur jahan zaroori tha wahan code ko bhi clean kiya hai.
